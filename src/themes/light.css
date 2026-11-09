@@ -1,0 +1,29 @@
+/* -------------------------------------------------------------
+ *
+ * !\file light.css
+ * !\brief Light theme for Codeglint.
+ * !\author Colin J.D. Stewart
+ *
+ * -------------------------------------------------------------
+ *
+ *           Copyright (c) 2026. Colin J.D. Stewart.
+ *                   All rights reserved
+ *
+ * -------------------------------------------------------------
+ */
+
+.codeglint {
+  --cg-foreground: #1f2937;
+  --cg-background: #f8fafc;
+  --cg-keyword: #7c3aed;
+  --cg-type: #0f766e;
+  --cg-string: #b45309;
+  --cg-comment: #6b7280;
+  --cg-number: #dc2626;
+  --cg-boolean: #9333ea;
+  --cg-constant: #2563eb;
+  --cg-operator: #374151;
+  --cg-punctuation: #4b5563;
+  --cg-property: #1d4ed8;
+  --cg-escape: #f59e0b;
+}

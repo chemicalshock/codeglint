@@ -1,0 +1,29 @@
+/* -------------------------------------------------------------
+ *
+ * !\file dark.css
+ * !\brief Dark theme for Codeglint.
+ * !\author Colin J.D. Stewart
+ *
+ * -------------------------------------------------------------
+ *
+ *           Copyright (c) 2026. Colin J.D. Stewart.
+ *                   All rights reserved
+ *
+ * -------------------------------------------------------------
+ */
+
+.codeglint {
+  --cg-foreground: #e5e7eb;
+  --cg-background: #111827;
+  --cg-keyword: #c084fc;
+  --cg-type: #67e8f9;
+  --cg-string: #fbbf24;
+  --cg-comment: #9ca3af;
+  --cg-number: #fca5a5;
+  --cg-boolean: #d8b4fe;
+  --cg-constant: #93c5fd;
+  --cg-operator: #d1d5db;
+  --cg-punctuation: #9ca3af;
+  --cg-property: #bfdbfe;
+  --cg-escape: #fbbf24;
+}

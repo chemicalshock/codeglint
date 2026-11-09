@@ -1,0 +1,47 @@
+/* -------------------------------------------------------------
+ *
+ * !\file base.css
+ * !\brief Shared CSS variables and base styles for Codeglint.
+ * !\author Colin J.D. Stewart
+ *
+ * -------------------------------------------------------------
+ *
+ *           Copyright (c) 2026. Colin J.D. Stewart.
+ *                   All rights reserved
+ *
+ * -------------------------------------------------------------
+ */
+
+.codeglint {
+  --cg-foreground: #111827;
+  --cg-background: transparent;
+  --cg-keyword: #7c3aed;
+  --cg-type: #0f766e;
+  --cg-string: #b45309;
+  --cg-comment: #6b7280;
+  --cg-number: #dc2626;
+  --cg-boolean: #9333ea;
+  --cg-constant: #2563eb;
+  --cg-operator: #374151;
+  --cg-punctuation: #4b5563;
+  --cg-property: #1d4ed8;
+  --cg-escape: #f59e0b;
+  --cg-identifier: var(--cg-foreground);
+  color: var(--cg-foreground);
+  background: var(--cg-background);
+  white-space: pre-wrap;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+.codeglint .cg-keyword { color: var(--cg-keyword); }
+.codeglint .cg-type { color: var(--cg-type); }
+.codeglint .cg-string { color: var(--cg-string); }
+.codeglint .cg-comment { color: var(--cg-comment); }
+.codeglint .cg-number { color: var(--cg-number); }
+.codeglint .cg-boolean { color: var(--cg-boolean); }
+.codeglint .cg-constant { color: var(--cg-constant); }
+.codeglint .cg-operator { color: var(--cg-operator); }
+.codeglint .cg-punctuation { color: var(--cg-punctuation); }
+.codeglint .cg-property { color: var(--cg-property); }
+.codeglint .cg-escape { color: var(--cg-escape); }
+.codeglint .cg-identifier { color: var(--cg-identifier); }

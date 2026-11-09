@@ -1,0 +1,18 @@
+{
+  "name": "codeglint",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Read-only code syntax highlighting library.",
+  "main": "./src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "test": "node --test",
+    "check": "node --test tst/**/*.test.js",
+    "build": "make build",
+    "minify": "make minify",
+    "package": "make package"
+  }
+}
