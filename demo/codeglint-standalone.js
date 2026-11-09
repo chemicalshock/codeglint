@@ -337,6 +337,192 @@
     return { tokens: tokens, state: null };
   }
 
+  var CPP_KEYWORDS = new Set([
+    'auto', 'break', 'case', 'char', 'constexpr', 'const', 'continue', 'default', 'do', 'double',
+    'else', 'enum', 'extern', 'float', 'for', 'goto', 'if', 'inline', 'int', 'long', 'register',
+    'return', 'short', 'signed', 'sizeof', 'static', 'struct', 'switch', 'typedef', 'union',
+    'unsigned', 'void', 'volatile', 'while', 'bool', 'class', 'namespace', 'public', 'protected',
+    'private', 'virtual', 'friend', 'override', 'final', 'template', 'typename', 'using', 'new',
+    'delete', 'throw', 'try', 'catch', 'operator', 'explicit', 'mutable', 'noexcept', 'decltype'
+  ]);
+
+  var CPP_TYPES = new Set([
+    'size_t', 'ptrdiff_t', 'uint8_t', 'uint16_t', 'uint32_t', 'uint64_t', 'int8_t', 'int16_t', 'int32_t', 'int64_t'
+  ]);
+
+  function tokeniseCppLine(line, state) {
+    var tokens = [];
+    var index = 0;
+    
+    var stringQuote = state && state.inString ? state.stringQuote : null;
+    var inBlockComment = state && state.inBlockComment ? true : false;
+
+    if (inBlockComment) {
+      var end = line.indexOf('*/');
+      if (end === -1) {
+        tokens.push({ type: 'comment', start: index, end: line.length });
+        return { tokens: tokens, state: { inBlockComment: true } };
+      } else {
+        tokens.push({ type: 'comment', start: index, end: end + 2 });
+        index = end + 2;
+        inBlockComment = false;
+      }
+    }
+
+    while (index < line.length) {
+      var character = line[index];
+      var next = line[index + 1];
+
+      if (stringQuote) {
+        var start = index;
+        var end = index;
+        var escaped = false;
+        while (end < line.length) {
+          var current = line[end];
+          if (escaped) {
+            escaped = false;
+            end += 1;
+            continue;
+          }
+          if (current === '\\') {
+            escaped = true;
+            end += 1;
+            continue;
+          }
+          if (current === stringQuote) {
+            tokens.push({ type: 'string', start: start, end: end + 1 });
+            index = end + 1;
+            stringQuote = null;
+            break;
+          }
+          end += 1;
+        }
+        if (stringQuote) {
+          tokens.push({ type: 'string', start: start, end: line.length });
+          index = line.length;
+        }
+        continue;
+      }
+
+      if (character === '/' && next === '/') {
+        tokens.push({ type: 'comment', start: index, end: line.length });
+        break;
+      }
+
+      if (character === '/' && next === '*') {
+        var end = line.indexOf('*/', index + 2);
+        if (end === -1) {
+          tokens.push({ type: 'comment', start: index, end: line.length });
+          return { tokens: tokens, state: { inBlockComment: true } };
+        }
+        tokens.push({ type: 'comment', start: index, end: end + 2 });
+        index = end + 2;
+        continue;
+      }
+
+      if (character === '\"' || character === '\'') {
+        stringQuote = character;
+        var start = index;
+        var end = index + 1;
+        var escaped = false;
+        while (end < line.length) {
+          var current = line[end];
+          if (escaped) {
+            escaped = false;
+            end += 1;
+            continue;
+          }
+          if (current === '\\') {
+            escaped = true;
+            end += 1;
+            continue;
+          }
+          if (current === stringQuote) {
+            tokens.push({ type: 'string', start: start, end: end + 1 });
+            index = end + 1;
+            stringQuote = null;
+            break;
+          }
+          end += 1;
+        }
+        if (stringQuote) {
+          tokens.push({ type: 'string', start: start, end: line.length });
+          index = line.length;
+        }
+        continue;
+      }
+
+      if (character === '#') {
+        var end = index + 1;
+        while (end < line.length && !/\s/.test(line[end])) {
+          end += 1;
+        }
+        tokens.push({ type: 'keyword', start: index, end: end });
+        index = end;
+        continue;
+      }
+
+      if (/\s/.test(character)) {
+        index += 1;
+        continue;
+      }
+
+      if (/[A-Za-z_]/.test(character)) {
+        var end = index + 1;
+        while (end < line.length && /[A-Za-z0-9_]/.test(line[end])) {
+          end += 1;
+        }
+        var word = line.slice(index, end);
+        if (CPP_KEYWORDS.has(word)) {
+          tokens.push({ type: 'keyword', start: index, end: end });
+        } else if (CPP_TYPES.has(word)) {
+          tokens.push({ type: 'type', start: index, end: end });
+        } else {
+          tokens.push({ type: 'identifier', start: index, end: end });
+        }
+        index = end;
+        continue;
+      }
+
+      if (/[0-9]/.test(character)) {
+        var end = index + 1;
+        while (end < line.length && /[0-9A-Fa-f.xXpP]/.test(line[end])) {
+          end += 1;
+        }
+        tokens.push({ type: 'number', start: index, end: end });
+        index = end;
+        continue;
+      }
+
+      if ('{}[](),.;:'.includes(character)) {
+        tokens.push({ type: 'punctuation', start: index, end: index + 1 });
+        index += 1;
+        continue;
+      }
+
+      if ('+-*/%=<>!&|?^~'.includes(character)) {
+        tokens.push({ type: 'operator', start: index, end: index + 1 });
+        index += 1;
+        continue;
+      }
+
+      tokens.push({ type: 'identifier', start: index, end: index + 1 });
+      index += 1;
+    }
+
+    var nextState = {};
+    if (stringQuote) {
+      nextState.inString = true;
+      nextState.stringQuote = stringQuote;
+    }
+    if (inBlockComment) {
+      nextState.inBlockComment = true;
+    }
+    
+    return { tokens: tokens, state: Object.keys(nextState).length > 0 ? nextState : null };
+  }
+
+
   function tokeniseJavaScriptLine(line, state) {
     state = state || null;
     var tokens = [];
@@ -524,7 +710,15 @@
     return tokens;
   }
 
+  var cpp = {
+    id: 'cpp',
+    aliases: ['c', 'cpp', 'c++'],
+    initialState: function () { return null; },
+    tokeniseLine: function (line, state) { return tokeniseCppLine(line, state); }
+  };
+
   var plaintext = {
+
     id: 'plaintext',
     aliases: ['text', 'plain', 'txt'],
     initialState: function () { return null; },
@@ -556,6 +750,9 @@
     }
     if (!this.registry.hasLanguage('javascript')) {
       this.registry.registerLanguage(javascript);
+    }
+    if (!this.registry.hasLanguage('cpp')) {
+      this.registry.registerLanguage(cpp);
     }
   }
 
@@ -595,6 +792,7 @@
     plaintext: plaintext,
     json: json,
     javascript: javascript,
+    cpp: cpp,
     renderHtml: renderHtml,
     escapeHtml: escapeHtml
   };

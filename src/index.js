@@ -18,6 +18,7 @@ import { renderHtml } from './render/html.js';
 import { plaintext } from './languages/plaintext.js';
 import { json } from './languages/json.js';
 import { javascript } from './languages/javascript.js';
+import { cpp } from './languages/cpp.js';
 
 /**
  * @brief Core Codeglint API.
@@ -34,8 +35,11 @@ export class Codeglint {
     if (!this.registry.hasLanguage('javascript')) {
       this.registerLanguage(javascript);
     }
+    if (!this.registry.hasLanguage('cpp')) {
+      this.registerLanguage(cpp);
+    }
   }
-
+  
   /**
    * @brief Register a language definition.
    * @param {Object} definition Language definition.
@@ -102,7 +106,7 @@ export class Codeglint {
 }
 
 export const defaultRegistrySingleton = defaultRegistry;
-export { registerLanguage, getLanguage, listLanguages, plaintext, json, javascript };
+export { registerLanguage, getLanguage, listLanguages, plaintext, json, javascript, cpp };
 export default Codeglint;
 export { renderHtml };
 

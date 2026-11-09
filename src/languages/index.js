@@ -14,9 +14,11 @@
 export { plaintext } from './plaintext.js';
 export { json } from './json.js';
 export { javascript } from './javascript.js';
+export { cpp } from './cpp.js';
 
 export const languages = {
   plaintext: (await import('./plaintext.js')).plaintext,
   json: (await import('./json.js')).json,
-  javascript: (await import('./javascript.js')).javascript
+  javascript: (await import('./javascript.js')).javascript,
+  cpp: (await import('./cpp.js')).cpp
 };
