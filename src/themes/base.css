@@ -45,3 +45,6 @@
 .codeglint .cg-property { color: var(--cg-property); }
 .codeglint .cg-escape { color: var(--cg-escape); }
 .codeglint .cg-identifier { color: var(--cg-identifier); }
+.codeglint .cg-function { color: var(--cg-function, var(--cg-property)); }
+.codeglint .cg-preprocessor { color: var(--cg-preprocessor, var(--cg-keyword)); }
+.codeglint .cg-attribute { color: var(--cg-attribute, var(--cg-type)); }

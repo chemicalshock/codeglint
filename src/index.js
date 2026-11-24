@@ -19,6 +19,7 @@ import { plaintext } from './languages/plaintext.js';
 import { json } from './languages/json.js';
 import { javascript } from './languages/javascript.js';
 import { cpp } from './languages/cpp.js';
+import { ziron } from './languages/ziron.js';
 
 /**
  * @brief Core Codeglint API.
@@ -37,6 +38,9 @@ export class Codeglint {
     }
     if (!this.registry.hasLanguage('cpp')) {
       this.registerLanguage(cpp);
+    }
+    if (!this.registry.hasLanguage('ziron')) {
+      this.registerLanguage(ziron);
     }
   }
   
@@ -106,7 +110,7 @@ export class Codeglint {
 }
 
 export const defaultRegistrySingleton = defaultRegistry;
-export { registerLanguage, getLanguage, listLanguages, plaintext, json, javascript, cpp };
+export { registerLanguage, getLanguage, listLanguages, plaintext, json, javascript, cpp, ziron };
 export default Codeglint;
 export { renderHtml };
 
