@@ -12,7 +12,8 @@ const html = glint.highlight('{"enabled": true, "count": 3}', { language: 'json'
 console.log(html);
 ```
 
-The default registry includes the `plaintext`, `json` and `javascript` language definitions.
+The default registry includes `plaintext`, `json`, `javascript`, `cpp`, `ziron`, `fracture`.
+Use `fracture` or `frac` for Fracture scripts.
 
 ## Browser usage
 
